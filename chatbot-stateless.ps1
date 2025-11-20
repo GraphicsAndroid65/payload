@@ -4,8 +4,11 @@
 
 param(
     [Parameter(Mandatory=$false, ValueFromRemainingArguments=$true)]
-    [string]$Query
+    [string[]]$args
 )
+
+# Join all arguments into a single query
+$Query = $args -join " "
 
 # Configuration
 $API_KEY = "AIzaSyA1tszcr-fKZNCotwm3Xt8yoyupBB2np6E"
