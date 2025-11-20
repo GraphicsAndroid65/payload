@@ -10,6 +10,16 @@ Write-Host @"
 ╚════════════════════════════════════════════════════════════════╝
 "@ -ForegroundColor Cyan
 
+# Set execution policy for current user
+Write-Host "Setting execution policy..." -ForegroundColor Yellow
+try {
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+    Write-Host "✓ Execution policy set" -ForegroundColor Green
+}
+catch {
+    Write-Host "⚠️  Could not set execution policy (may be restricted)" -ForegroundColor Yellow
+}
+
 # Setup directories
 $installDir = "$env:USERPROFILE\GamerX-AI"
 $configDir = "$env:APPDATA\ai-chatbot"
