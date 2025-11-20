@@ -2,13 +2,8 @@
 # Usage: iex (iwr 'https://raw.githubusercontent.com/GraphicsAndroid65/payload/main/chatbot-stateless.ps1').Content
 # Then: ai "your question"
 
-param(
-    [Parameter(Mandatory=$false, ValueFromRemainingArguments=$true)]
-    [string[]]$args
-)
-
-# Join all arguments into a single query
-$Query = $args -join " "
+# Get query from first argument
+$Query = $args[0]
 
 # Configuration
 $API_KEY = "AIzaSyA1tszcr-fKZNCotwm3Xt8yoyupBB2np6E"
