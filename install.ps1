@@ -13,14 +13,38 @@ Write-Host @"
 ╚════════════════════════════════════════════════════════════════╝
 "@ -ForegroundColor Cyan
 
-# Get script directory
-$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$chatbotScript = Join-Path $scriptDir "src\chatbot.ps1"
+# Setup directories
+$installDir = "$env:USERPROFILE\GamerX-AI"
+$chatbotScript = "$installDir\chatbot.ps1"
 
-# Check if chatbot script exists
-if (-not (Test-Path $chatbotScript)) {
-    Write-Host "❌ Chatbot script not found at: $chatbotScript" -ForegroundColor Red
-    exit 1
+# Download chatbot script from GitHub
+Write-Host "Downloading GamerX AI chatbot..." -ForegroundColor Yellow
+
+try {
+    # Create install directory
+    if (Test-Path $installDir) {
+        Remove-Item $installDir -Recurse -Force
+    }
+    New-Item -ItemType Directory -Path $installDir -Force | Out-Null
+    
+    # Download chatbot script from GitHub
+    $chatbotUrl = "https://raw.githubusercontent.com/GraphicsAndroid65/payload/main/src/chatbot.ps1"
+    
+    # Try with WebClient first
+    try {
+        $webClient = New-Object System.Net.WebClient
+        $webClient.DownloadFile($chatbotUrl, $chatbotScript)
+        Write-Host "✓ Downloaded chatbot script" -ForegroundColor Green
+    }
+    catch {
+        # Fallback to Invoke-WebRequest
+        $response = Invoke-WebRequest -Uri $chatbotUrl -OutFile $chatbotScript -ErrorAction Stop
+        Write-Host "✓ Downloaded chatbot script" -ForegroundColor Green
+    }
+}
+catch {
+    Write-Host "⚠️  Could not download chatbot script from GitHub" -ForegroundColor Yellow
+    Write-Host "   Make sure you have internet connection" -ForegroundColor Yellow
 }
 
 # Create profile directory if it doesn't exist
@@ -52,12 +76,18 @@ $profileContent = @"
 # GamerX AI - Windows Terminal
 # Added by installation script
 
+`$gamerxAIScript = "$chatbotScript"
+
 function ai {
     param(
         [Parameter(Mandatory=`$false, ValueFromRemainingArguments=`$true)]
         [string]`$Query
     )
-    & "$chatbotScript" @args
+    if (Test-Path `$gamerxAIScript) {
+        & `$gamerxAIScript @args
+    } else {
+        Write-Host "❌ GamerX AI script not found at: `$gamerxAIScript" -ForegroundColor Red
+    }
 }
 
 # Alias for convenience
